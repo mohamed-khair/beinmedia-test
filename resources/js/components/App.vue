@@ -11,12 +11,11 @@
                 >
                     <v-col
                         cols="12"
-                        sm="8"
-                        md="4"
                     >
-                        <v-card class="elevation-12">
+                        <v-card class="elevation-12 main-card">
                             <v-card-text>
-                                Hello
+                                <div class="headline font-weight-black mb-3">Expert Scheduler</div>
+                                <router-view></router-view>
                             </v-card-text>
                         </v-card>
                     </v-col>
@@ -32,6 +31,10 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.main-card{
+    min-height: 500px;
+    max-width: 760px!important;
+    margin: auto;
+}
 </style>

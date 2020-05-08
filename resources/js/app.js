@@ -1,12 +1,14 @@
 import "./bootstrap";
 import Vue from "vue";
 import vuetify from './plugins/vuetify'
+import App from "./components/App";
+import VueRouter from 'vue-router';
+import router from "./router/routes";
 
-
-const files = require.context('./', true, /\.vue$/i)
-files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
+Vue.use(VueRouter);
 
 new Vue({
     vuetify,
+    router,
+    render: h => h(App)
 }).$mount('#app')
