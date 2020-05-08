@@ -16,7 +16,7 @@
         </v-card-subtitle>
 
         <v-card-actions>
-            <v-btn text color="primary">Book</v-btn>
+            <v-btn text color="primary" @click="bookExpert">Book</v-btn>
 
             <v-spacer></v-spacer>
 
@@ -46,6 +46,11 @@
         data(){
             return{
                 show: false
+            }
+        },
+        methods:{
+            bookExpert(){
+                this.$router.push({name: 'schedule', params: {expertId: 1}});
             }
         }
     }

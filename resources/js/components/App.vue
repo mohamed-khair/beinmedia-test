@@ -22,6 +22,7 @@
                 </v-row>
             </v-container>
         </v-content>
+        <img src="/images/logo.png" class="logo-image">
     </v-app>
 </template>
 
@@ -36,5 +37,7 @@
     min-height: 500px;
     max-width: 760px!important;
     margin: auto;
+    position: relative;
+    z-index: 2;
 }
 </style>

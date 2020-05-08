@@ -1935,6 +1935,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "App"
 });
@@ -1998,6 +1999,16 @@ __webpack_require__.r(__webpack_exports__);
     return {
       show: false
     };
+  },
+  methods: {
+    bookExpert: function bookExpert() {
+      this.$router.push({
+        name: 'schedule',
+        params: {
+          expertId: 1
+        }
+      });
+    }
   }
 });
 
@@ -6616,7 +6627,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".main-card {\n  min-height: 500px;\n  max-width: 760px !important;\n  margin: auto;\n}", ""]);
+exports.push([module.i, ".main-card {\n  min-height: 500px;\n  max-width: 760px !important;\n  margin: auto;\n  position: relative;\n  z-index: 2;\n}", ""]);
 
 // exports
 
@@ -48250,7 +48261,12 @@ var render = function() {
           )
         ],
         1
-      )
+      ),
+      _vm._v(" "),
+      _c("img", {
+        staticClass: "logo-image",
+        attrs: { src: "/images/logo.png" }
+      })
     ],
     1
   )
@@ -48297,9 +48313,14 @@ var render = function() {
       _c(
         "v-card-actions",
         [
-          _c("v-btn", { attrs: { text: "", color: "primary" } }, [
-            _vm._v("Book")
-          ]),
+          _c(
+            "v-btn",
+            {
+              attrs: { text: "", color: "primary" },
+              on: { click: _vm.bookExpert }
+            },
+            [_vm._v("Book")]
+          ),
           _vm._v(" "),
           _c("v-spacer"),
           _vm._v(" "),
@@ -105670,8 +105691,9 @@ var routes = [{
   path: '/',
   component: _components_Experts__WEBPACK_IMPORTED_MODULE_0__["default"]
 }, {
-  path: '/schedule',
-  component: _components_Schedule__WEBPACK_IMPORTED_MODULE_1__["default"]
+  path: '/schedule/:expertId',
+  component: _components_Schedule__WEBPACK_IMPORTED_MODULE_1__["default"],
+  name: "schedule"
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({
   routes: routes

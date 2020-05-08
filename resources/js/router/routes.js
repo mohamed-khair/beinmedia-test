@@ -4,7 +4,7 @@ import VueRouter from "vue-router";
 
 const routes = [
     { path: '/', component: Experts },
-    { path: '/schedule', component: Schedule }
+    { path: '/schedule/:expertId', component: Schedule, name: "schedule" }
 ]
 
 const router = new VueRouter({
