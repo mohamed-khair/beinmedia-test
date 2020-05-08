@@ -1,8 +1,16 @@
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
-
 // Variables
 @import 'variables';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+
+html, body {
+    height: 100%;
+    min-height: 100vh;
+}
+
+.gradient-bg {
+    background: #03b9f1;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #03b9f1, #363dc2);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #03b9f1, #363dc2); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
