@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Appointment;
+use App\Http\Requests\FindAvailableTimeSlotsRequest;
+use App\Http\Requests\ScheduleAppointmentRequest;
 use App\Services\AppointmentService;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,7 @@ class AppointmentController extends Controller
         $this->appointmentService = $appointmentService;
     }
 
-    public function store(Request $request)
+    public function store(ScheduleAppointmentRequest $request)
     {
         $data = $request->all();
         $appointment = $this->appointmentService->storeAppointment($data["expert_id"], $data["client_name"], $data["date"], $data["start_time"], $data["end_time"], $data["timezone"]);
@@ -25,7 +27,7 @@ class AppointmentController extends Controller
         return response()->setStatusCode(400);
     }
 
-    public function availableTimeSlots(Request $request){
+    public function availableTimeSlots(FindAvailableTimeSlotsRequest $request){
         $data = $request->all();
         $slots = $this->appointmentService->getAvailableTimeSlots($data["expert_id"], $data["duration"], $data["date"], $data["timezone"]);
         return response()->json($slots);

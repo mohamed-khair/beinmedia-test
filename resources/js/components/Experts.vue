@@ -5,7 +5,7 @@
     </v-overlay>
     <div class="title font-weight-bold">Let's select an expert for your next work ...</div>
     <div>
-        <swiper :options="swiperOptions">
+        <swiper :options="swiperOptions" v-show="!overlay">
             <swiper-slide v-for="expert in experts" :key="expert.id">
                 <expert-card :expert="expert"></expert-card>
             </swiper-slide>

@@ -22,7 +22,7 @@
                 :items="slots"
                 v-model="selectedSlot"
                 :loading="loadingSlots"
-                label="Slots"
+                label="Available Time Slots"
             ></v-autocomplete>
             <template v-if="hasSubmitted">
                 <v-divider></v-divider>
