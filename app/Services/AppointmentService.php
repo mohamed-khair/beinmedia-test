@@ -19,8 +19,11 @@ class AppointmentService
         if(!$this->validation($expert_id, $date, $start_time, $end_time, $timezone)){
             return null;
         }
-        $start = Carbon::parse("$date $start_time", $timezone);
-        $end = Carbon::parse("$date $end_time", $timezone);
+        $expert = Expert::find($expert_id);
+        $expert_timezone = $expert->timezone;
+
+        $start = Carbon::parse("$date $start_time", $timezone)->setTimezone($expert_timezone);
+        $end = Carbon::parse("$date $end_time", $timezone)->setTimezone($expert_timezone);
         return Appointment::create([
            "start" => $start->toDateTimeString(),
            "end" => $end->toDateTimeString(),
@@ -45,7 +48,7 @@ class AppointmentService
         foreach ($appointments as $appointment){
             $appointment_start = Carbon::parse($appointment->start, $expert_timezone)->toDateTimeImmutable();
             $appointment_end = Carbon::parse($appointment->end, $expert_timezone)->toDateTimeImmutable();
-            $appointment_period = new Period($appointment_start, $appointment_end, Precision::MINUTE, Boundaries::EXCLUDE_END);
+            $appointment_period = new Period($appointment_start, $appointment_end, Precision::MINUTE, Boundaries::EXCLUDE_ALL);
             array_push($appointments_periods, $appointment_period);
         }
 
@@ -59,8 +62,8 @@ class AppointmentService
             }
             if($available){
                 array_push($slots, [
-                    "start" => Carbon::parse($time_start->getStart(), $timezone)->format("H:i"),
-                    "end" => Carbon::parse($time_start->getEnd(), $timezone)->format("H:i")
+                    "start" => Carbon::parse($time_start->getStart()->format("Y-m-d H:i"), $expert_timezone)->setTimezone($timezone)->format("H:i"),
+                    "end" => Carbon::parse($time_start->getEnd()->format("Y-m-d H:i"), $expert_timezone)->setTimezone($timezone)->format("H:i")
                 ]);
             }
         }
@@ -100,7 +103,7 @@ class AppointmentService
         while($end->diffInMinutes($start) >= $duration){
             $new_start = $start->clone();
             $new_start->addMinutes($duration);
-            array_push($slots, new Period($start->toDateTimeImmutable(), $new_start->toDateTimeImmutable(), Precision::MINUTE, Boundaries::EXCLUDE_END));
+            array_push($slots, new Period($start->toDateTimeImmutable(), $new_start->toDateTimeImmutable(), Precision::MINUTE, Boundaries::EXCLUDE_ALL));
             $start = $new_start;
         }
         return $slots;
