@@ -1,5 +1,8 @@
 <template>
 <div>
+    <v-overlay :value="overlay" opacity=".8">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <div class="title font-weight-bold">Fill the forms to order {{expert.name}} service</div>
     <v-row>
         <v-col cols="12" sm="12" md="6">
@@ -71,6 +74,7 @@
                 ],
                 slots: [],
                 expert: {},
+                overlay: true,
                 loadingSlots: false,
                 loadingTimezones: false,
                 loadingSubmit: false,
@@ -86,7 +90,10 @@
         },
         mounted() {
             this.getTimezones();
-            ExpertsApi.getExpert(this.expertId).then(expert => this.expert = expert).catch(err => this.$router.push("/"));
+            ExpertsApi.getExpert(this.expertId).then(expert => {
+                this.expert = expert;
+                this.overlay = false;
+            }).catch(err => this.$router.push("/"));
         },
         watch:{
             selectedDate(){

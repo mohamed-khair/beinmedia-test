@@ -1,5 +1,8 @@
 <template>
 <div>
+    <v-overlay :value="overlay" opacity=".8">
+        <v-progress-circular indeterminate size="64"></v-progress-circular>
+    </v-overlay>
     <div class="title font-weight-bold">Let's select an expert for your next work ...</div>
     <div>
         <swiper :options="swiperOptions">
@@ -27,12 +30,20 @@
         data(){
             return {
                 swiperOptions,
-                experts: []
+                experts: [],
+                overlay: true,
             }
         },
         mounted() {
             ExpertsApi.getExperts()
-            .then(experts => this.experts = experts);
+                .then(experts => {
+                    this.overlay = false;
+                    this.experts = experts;
+                })
+                .catch(err => {
+                    this.overlay = false;
+                    this.$toast.error(err.message);
+                })
         }
     }
 </script>
