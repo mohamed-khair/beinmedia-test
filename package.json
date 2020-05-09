@@ -26,6 +26,7 @@
     "dependencies": {
         "hover.css": "^2.3.2",
         "moment": "^2.25.3",
+        "query-string": "^6.12.1",
         "swiper": "^5.3.8",
         "vue-awesome-swiper": "^4.1.1",
         "vue-router": "^3.1.6",

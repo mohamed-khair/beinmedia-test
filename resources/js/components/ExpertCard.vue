@@ -30,7 +30,7 @@
                 <v-divider class="mx-1"></v-divider>
                 <v-card-text class="pt-0">
                     <div>Country: <span class="font-weight-bold" v-html="expert.country"></span></div>
-                    <div>Working Hours: <span class="font-weight-bold">{{getPrettifiedWorkTime()}}</span> </div>
+                    <div>Working Hours: <div class="font-weight-bold">{{getPrettifiedWorkTime()}}</div> </div>
                 </v-card-text>
             </div>
         </v-expand-transition>
@@ -52,9 +52,7 @@
             },
             getPrettifiedWorkTime(){
                 const {expert} = this;
-                const start = this.$moment(expert.start_work, "HH:mm:ss").format("HH:mm")
-                const end = this.$moment(expert.start_work, "HH:mm:ss").format("HH:mm")
-                return `${start} - ${end}`;
+                return `${expert.start_work} - ${expert.end_work}`;
             }
         }
     }

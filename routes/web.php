@@ -22,3 +22,5 @@ Route::apiResource("/experts", "ExpertController");
 Route::get('/timezone', 'TimezoneController@getCurrentUserTimezone');
 Route::get('/timezones', 'TimezoneController@getAllTimezones');
 
+Route::get("/available-slots", "AppointmentController@availableTimeSlots");
+Route::post("/schedule", "AppointmentController@store");
