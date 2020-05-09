@@ -2002,11 +2002,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ExpertCard",
+  props: ["expert"],
   data: function data() {
     return {
       show: false
@@ -2017,7 +2015,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$router.push({
         name: 'schedule',
         params: {
-          expertId: 1
+          expertId: this.expert.id
         }
       });
     }
@@ -2039,6 +2037,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_awesome_swiper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-awesome-swiper */ "./node_modules/vue-awesome-swiper/dist/vue-awesome-swiper.js");
 /* harmony import */ var vue_awesome_swiper__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_awesome_swiper__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _plugins_swiperOptions__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../plugins/swiperOptions */ "./resources/js/plugins/swiperOptions.js");
+/* harmony import */ var _api_ExpertsApi__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/ExpertsApi */ "./resources/js/api/ExpertsApi.js");
 //
 //
 //
@@ -2053,6 +2052,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -2068,8 +2068,16 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      swiperOptions: _plugins_swiperOptions__WEBPACK_IMPORTED_MODULE_2__["default"]
+      swiperOptions: _plugins_swiperOptions__WEBPACK_IMPORTED_MODULE_2__["default"],
+      experts: []
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    _api_ExpertsApi__WEBPACK_IMPORTED_MODULE_3__["default"].getExperts().then(function (experts) {
+      return _this.experts = experts;
+    });
   }
 });
 
@@ -2086,6 +2094,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_TimezoneApi__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/TimezoneApi */ "./resources/js/api/TimezoneApi.js");
 /* harmony import */ var _api_SchedulingApi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/SchedulingApi */ "./resources/js/api/SchedulingApi.js");
+/* harmony import */ var _api_ExpertsApi__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/ExpertsApi */ "./resources/js/api/ExpertsApi.js");
 //
 //
 //
@@ -2126,6 +2135,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2146,6 +2156,7 @@ __webpack_require__.r(__webpack_exports__);
         value: 60
       }],
       slots: [],
+      expert: {},
       loadingSlots: false,
       timezones: [],
       selectedTimezone: "",
@@ -2167,6 +2178,11 @@ __webpack_require__.r(__webpack_exports__);
       return _this.selectedTimezone = timezone;
     })["catch"](function (err) {
       return console.log(err);
+    });
+    _api_ExpertsApi__WEBPACK_IMPORTED_MODULE_2__["default"].getExpert(this.expertId).then(function (expert) {
+      return _this.expert = expert;
+    })["catch"](function (err) {
+      return _this.$router.push("/");
     });
   },
   watch: {
@@ -49175,13 +49191,15 @@ var render = function() {
         attrs: { src: "/images/avatar.png" }
       }),
       _vm._v(" "),
-      _c("v-card-title", { staticClass: "text-center justify-center" }, [
-        _vm._v("\n        Mhd Dimashky\n    ")
-      ]),
+      _c("v-card-title", {
+        staticClass: "text-center justify-center",
+        domProps: { innerHTML: _vm._s(_vm.expert.name) }
+      }),
       _vm._v(" "),
-      _c("v-card-subtitle", { staticClass: "text-center" }, [
-        _vm._v("\n        Software Engineer\n    ")
-      ]),
+      _c("v-card-subtitle", {
+        staticClass: "text-center",
+        domProps: { innerHTML: _vm._s(_vm.expert.expert) }
+      }),
       _vm._v(" "),
       _c(
         "v-card-actions",
@@ -49237,15 +49255,20 @@ var render = function() {
             _c("v-card-text", { staticClass: "pt-0" }, [
               _c("div", [
                 _vm._v("Country: "),
-                _c("span", { staticClass: "font-weight-bold" }, [
-                  _vm._v("Syria")
-                ])
+                _c("span", {
+                  staticClass: "font-weight-bold",
+                  domProps: { innerHTML: _vm._s(_vm.expert.country) }
+                })
               ]),
               _vm._v(" "),
               _c("div", [
                 _vm._v("Working Hours: "),
                 _c("span", { staticClass: "font-weight-bold" }, [
-                  _vm._v("08:00 - 16:00")
+                  _vm._v(
+                    _vm._s(_vm.expert.start_work) +
+                      " - " +
+                      _vm._s(_vm.expert.end_work)
+                  )
                 ])
               ])
             ])
@@ -49291,11 +49314,14 @@ var render = function() {
           "swiper",
           { attrs: { options: _vm.swiperOptions } },
           [
-            _c("swiper-slide", [_c("expert-card")], 1),
-            _vm._v(" "),
-            _c("swiper-slide", [_c("expert-card")], 1),
-            _vm._v(" "),
-            _c("swiper-slide", [_c("expert-card")], 1),
+            _vm._l(_vm.experts, function(expert) {
+              return _c(
+                "swiper-slide",
+                { key: expert.id },
+                [_c("expert-card", { attrs: { expert: expert } })],
+                1
+              )
+            }),
             _vm._v(" "),
             _c("div", {
               staticClass: "swiper-pagination",
@@ -49303,7 +49329,7 @@ var render = function() {
               slot: "pagination"
             })
           ],
-          1
+          2
         )
       ],
       1
@@ -49336,7 +49362,9 @@ var render = function() {
     "div",
     [
       _c("div", { staticClass: "title font-weight-bold" }, [
-        _vm._v("Fill the forms to continue ..")
+        _vm._v(
+          "Fill the forms to order " + _vm._s(_vm.expert.name) + " service"
+        )
       ]),
       _vm._v(" "),
       _c(
@@ -106217,6 +106245,103 @@ $http.defaults.headers.common["Connection"] = "keep-alive";
 $http.defaults.headers.common["Content-Type"] = "application/json; charset=utf-8";
 $http.defaults.headers.common["Accept"] = "application/json";
 /* harmony default export */ __webpack_exports__["default"] = ($http);
+
+/***/ }),
+
+/***/ "./resources/js/api/ExpertsApi.js":
+/*!****************************************!*\
+  !*** ./resources/js/api/ExpertsApi.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ExpertsApi; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _$http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./$http */ "./resources/js/api/$http.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var ExpertsApi = /*#__PURE__*/function () {
+  function ExpertsApi() {
+    _classCallCheck(this, ExpertsApi);
+  }
+
+  _createClass(ExpertsApi, null, [{
+    key: "getExperts",
+    value: function () {
+      var _getExperts = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _$http__WEBPACK_IMPORTED_MODULE_1__["default"].get("/experts");
+
+              case 2:
+                return _context.abrupt("return", _context.sent.data);
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }));
+
+      function getExperts() {
+        return _getExperts.apply(this, arguments);
+      }
+
+      return getExperts;
+    }()
+  }, {
+    key: "getExpert",
+    value: function () {
+      var _getExpert = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(expertId) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _$http__WEBPACK_IMPORTED_MODULE_1__["default"].get("/experts/".concat(expertId));
+
+              case 2:
+                return _context2.abrupt("return", _context2.sent.data);
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      function getExpert(_x) {
+        return _getExpert.apply(this, arguments);
+      }
+
+      return getExpert;
+    }()
+  }]);
+
+  return ExpertsApi;
+}();
+
+
 
 /***/ }),
 

@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="title font-weight-bold">Fill the forms to continue ..</div>
+    <div class="title font-weight-bold">Fill the forms to order {{expert.name}} service</div>
     <v-row>
         <v-col cols="12" sm="12" md="6">
             <v-autocomplete
@@ -41,6 +41,7 @@
 <script>
     import Timezone from "../api/TimezoneApi";
     import SchedulingApi from "../api/SchedulingApi";
+    import ExpertsApi from "../api/ExpertsApi";
 
     export default {
         name: "Schedule",
@@ -53,6 +54,7 @@
                     {text: "1 hour", value: 60},
                 ],
                 slots: [],
+                expert: {},
                 loadingSlots: false,
                 timezones: [],
                 selectedTimezone: "",
@@ -65,6 +67,7 @@
         mounted() {
             Timezone.getTimezones().then(list => this.timezones = list).catch(err => console.log(err));
             Timezone.getUserTimezone().then(timezone => this.selectedTimezone = timezone).catch(err => console.log(err));
+            ExpertsApi.getExpert(this.expertId).then(expert => this.expert = expert).catch(err => this.$router.push("/"));
         },
         watch:{
             selectedDate(){

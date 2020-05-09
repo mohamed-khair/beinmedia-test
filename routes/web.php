@@ -17,6 +17,8 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::apiResource("/experts", "ExpertController");
+
 Route::get('/timezone', 'TimezoneController@getCurrentUserTimezone');
 Route::get('/timezones', 'TimezoneController@getAllTimezones');
 

@@ -7,13 +7,10 @@
             class="img-fluid"
         ></v-img>
 
-        <v-card-title class="text-center justify-center">
-            Mhd Dimashky
+        <v-card-title class="text-center justify-center" v-html="expert.name">
         </v-card-title>
 
-        <v-card-subtitle class="text-center">
-            Software Engineer
-        </v-card-subtitle>
+        <v-card-subtitle class="text-center" v-html="expert.expert"></v-card-subtitle>
 
         <v-card-actions>
             <v-btn text color="primary" @click="bookExpert">Book</v-btn>
@@ -32,8 +29,8 @@
             <div v-show="show">
                 <v-divider class="mx-1"></v-divider>
                 <v-card-text class="pt-0">
-                    <div>Country: <span class="font-weight-bold">Syria</span></div>
-                    <div>Working Hours: <span class="font-weight-bold">08:00 - 16:00</span> </div>
+                    <div>Country: <span class="font-weight-bold" v-html="expert.country"></span></div>
+                    <div>Working Hours: <span class="font-weight-bold">{{expert.start_work}} - {{expert.end_work}}</span> </div>
                 </v-card-text>
             </div>
         </v-expand-transition>
@@ -43,6 +40,7 @@
 <script>
     export default {
         name: "ExpertCard",
+        props: ["expert"],
         data(){
             return{
                 show: false
@@ -50,7 +48,7 @@
         },
         methods:{
             bookExpert(){
-                this.$router.push({name: 'schedule', params: {expertId: 1}});
+                this.$router.push({name: 'schedule', params: {expertId: this.expert.id}});
             }
         }
     }
