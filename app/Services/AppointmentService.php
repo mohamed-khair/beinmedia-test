@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Spatie\Period\Boundaries;
 use Spatie\Period\Period;
+use Spatie\Period\PeriodCollection;
 use Spatie\Period\Precision;
 
 class AppointmentService
@@ -25,8 +26,8 @@ class AppointmentService
         $start = Carbon::parse("$date $start_time", $timezone)->setTimezone($expert_timezone);
         $end = Carbon::parse("$date $end_time", $timezone)->setTimezone($expert_timezone);
         return Appointment::create([
-           "start" => $start->toDateTimeString(),
-           "end" => $end->toDateTimeString(),
+            "start" => $start->toDateTimeString(),
+            "end" => $end->toDateTimeString(),
             "client_name" => $client_name,
             "expert_id" => $expert_id,
         ]);
@@ -43,29 +44,23 @@ class AppointmentService
         $start_work = Carbon::createFromFormat("Y-m-d H:i:s", "${date} {$expert->start_work}", $expert_timezone);
         $end_work = Carbon::createFromFormat("Y-m-d H:i:s", "${date} {$expert->end_work}", $expert_timezone);
         $slots = [];
-        $time_starts = $this->rangeToSlots($start_work, $end_work, (int)$duration);
-        $appointments_periods = [];
+        $appointments_collection = new PeriodCollection();
         foreach ($appointments as $appointment){
             $appointment_start = Carbon::parse($appointment->start, $expert_timezone)->toDateTimeImmutable();
             $appointment_end = Carbon::parse($appointment->end, $expert_timezone)->toDateTimeImmutable();
             $appointment_period = new Period($appointment_start, $appointment_end, Precision::MINUTE, Boundaries::EXCLUDE_ALL);
-            array_push($appointments_periods, $appointment_period);
+            $appointments_collection = $appointments_collection->add($appointment_period);
         }
 
-        foreach ($time_starts as $time_start){
-            $available = true;
-            foreach ($appointments_periods as $appointments_period){
-                if($time_start->overlapsWith($appointments_period)){
-                    $available = false;
-                    break;
-                }
-            }
-            if($available){
-                array_push($slots, [
-                    "start" => Carbon::parse($time_start->getStart()->format("Y-m-d H:i"), $expert_timezone)->setTimezone($timezone)->format("H:i"),
-                    "end" => Carbon::parse($time_start->getEnd()->format("Y-m-d H:i"), $expert_timezone)->setTimezone($timezone)->format("H:i")
-                ]);
-            }
+        $total_work = new Period($start_work->toDateTimeImmutable(), $end_work->toDateTimeImmutable(), Precision::MINUTE, Boundaries::EXCLUDE_NONE);
+
+        foreach ($this->rangeToSlots($total_work->getStart(), $total_work->getEnd(), $duration) as $slot){
+            if(count($appointments_collection->overlap(new PeriodCollection($slot))) != 0)
+                continue;
+            array_push($slots, [
+                "start" => Carbon::parse($slot->getStart()->format("Y-m-d H:i"), $expert_timezone)->setTimezone($timezone)->format("H:i"),
+                "end" => Carbon::parse($slot->getEnd()->format("Y-m-d H:i"), $expert_timezone)->setTimezone($timezone)->format("H:i")
+            ]);
         }
         return $slots;
     }
@@ -104,7 +99,7 @@ class AppointmentService
             $new_start = $start->clone();
             $new_start->addMinutes($duration);
             array_push($slots, new Period($start->toDateTimeImmutable(), $new_start->toDateTimeImmutable(), Precision::MINUTE, Boundaries::EXCLUDE_ALL));
-            $start = $new_start;
+            $start = $start->clone()->addMinutes(15);
         }
         return $slots;
     }
