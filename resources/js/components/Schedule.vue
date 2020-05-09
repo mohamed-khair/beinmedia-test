@@ -20,7 +20,8 @@
                 label="Slots"
             ></v-select>
             <v-divider></v-divider>
-            <div class="align-bottom text-center">
+            <div class="d-flex justify-space-around align-bottom text-center">
+                <v-btn color="primary" small text class="rounded-pill" @click="$router.go(-1)">Return Back</v-btn>
                 <v-btn :disabled="!isAllFieldsFilled" color="gradient-bg" class="white--text rounded-pill">Submit</v-btn>
             </div>
         </v-col>
