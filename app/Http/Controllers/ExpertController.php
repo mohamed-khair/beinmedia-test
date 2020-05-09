@@ -23,7 +23,7 @@ class ExpertController extends Controller
     public function index(Request $request)
     {
         $experts = Expert::all();
-        $user_tz = $this->timezoneService->getCurrentTimezone($request->ip());
+        $user_tz = $this->timezoneService->getCurrentTimezone($request->getClientIp());
         foreach ($experts as $idx => $expert){
             $expert_tz = $expert->timezone;
             $experts[$idx]["start_work"] = Carbon::createFromTimeString($expert["start_work"], $expert_tz)->setTimezone($user_tz)->format("g:i A");

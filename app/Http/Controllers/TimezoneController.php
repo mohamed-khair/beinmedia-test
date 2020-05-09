@@ -27,7 +27,7 @@ class TimezoneController extends Controller
     public function getCurrentUserTimezone(Request $request)
     {
         $serverTimezone = config("timezone", "Asia/Dubai");
-        $timezone = $this->timezoneService->getCurrentTimezone($request->ip())["timezone"] ?? $serverTimezone;
+        $timezone = $this->timezoneService->getCurrentTimezone($request->getClientIp())["timezone"] ?? $serverTimezone;
         return response()->json($timezone);
     }
 }
