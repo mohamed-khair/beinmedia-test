@@ -6,7 +6,7 @@ export default class SchedulingApi {
         const body = {
             expert_id, client_name, date, start_time, end_time, timezone
         }
-        return (await $http.post("schedule", body)).data;
+        return (await $http.post("/appointments/store", body)).data;
     }
 
     static async getTimeSlots(expert_id, timezone, date, duration){
@@ -16,6 +16,6 @@ export default class SchedulingApi {
             date,
             duration
         }
-        return (await $http.get(`available-slots?${queryString.stringify(qs)}`)).data;
+        return (await $http.get(`/appointments/slots?${queryString.stringify(qs)}`)).data;
     }
 }

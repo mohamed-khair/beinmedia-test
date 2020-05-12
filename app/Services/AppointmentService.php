@@ -17,7 +17,7 @@ class AppointmentService
 {
     public function storeAppointment($expert_id, $client_name, $date, $start_time, $end_time, $timezone)
     {
-        if(!$this->validation($expert_id, $date, $start_time, $end_time, $timezone)){
+        if(!$this->validateScheduleAppointmentRequest($expert_id, $date, $start_time, $end_time, $timezone)){
             return null;
         }
         $expert = Expert::find($expert_id);
@@ -65,7 +65,7 @@ class AppointmentService
         return $slots;
     }
 
-    private function validation($expert_id, $date, $start_time, $end_time, $timezone){
+    public function validateScheduleAppointmentRequest($expert_id, $date, $start_time, $end_time, $timezone){
         $start = Carbon::createFromTimeString($start_time, $timezone);
         $end = Carbon::createFromTimeString($end_time, $timezone);
         $slots = $this->getAvailableTimeSlots($expert_id, $end->diffInMinutes($start), $date, $timezone);

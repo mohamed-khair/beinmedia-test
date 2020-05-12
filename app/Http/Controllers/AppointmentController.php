@@ -6,7 +6,11 @@ use App\Appointment;
 use App\Http\Requests\FindAvailableTimeSlotsRequest;
 use App\Http\Requests\ScheduleAppointmentRequest;
 use App\Services\AppointmentService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AppointmentController extends Controller
 {
@@ -17,19 +21,32 @@ class AppointmentController extends Controller
         $this->appointmentService = $appointmentService;
     }
 
+    /**
+     * Schedule new appointment
+     *
+     * @param ScheduleAppointmentRequest $request
+     * @return Application|ResponseFactory|JsonResponse|Response|object
+     */
     public function store(ScheduleAppointmentRequest $request)
     {
-        $data = $request->all();
-        $appointment = $this->appointmentService->storeAppointment($data["expert_id"], $data["client_name"], $data["date"], $data["start_time"], $data["end_time"], $data["timezone"]);
+        extract($request->all());
+        $appointment = $this->appointmentService->storeAppointment($expert_id, $client_name, $date, $start_time, $end_time, $timezone);
 
         if($appointment)
             return response()->json($appointment);
-        return response()->setStatusCode(400);
+
+        return response()->setStatusCode(400, "Couldn't schedule your desired appointment, please try again.");
     }
 
-    public function availableTimeSlots(FindAvailableTimeSlotsRequest $request){
-        $data = $request->all();
-        $slots = $this->appointmentService->getAvailableTimeSlots($data["expert_id"], $data["duration"], $data["date"], $data["timezone"]);
+    /**
+     * Get available time slots for scheduling a new appointment
+     *
+     * @param FindAvailableTimeSlotsRequest $request
+     * @return JsonResponse
+     */
+    public function slots(FindAvailableTimeSlotsRequest $request){
+        extract($request->all());
+        $slots = $this->appointmentService->getAvailableTimeSlots($expert_id, $duration, $date, $timezone);
         return response()->json($slots);
     }
 }

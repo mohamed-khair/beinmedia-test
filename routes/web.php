@@ -13,14 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
+Route::view('/', 'index');
 
-Route::apiResource("/experts", "ExpertController");
+Route::get("/experts", "ExpertController@index");
+Route::get("/experts/{expert}", "ExpertController@show");
 
 Route::get('/timezone', 'TimezoneController@getCurrentUserTimezone');
 Route::get('/timezones', 'TimezoneController@getAllTimezones');
 
-Route::get("/available-slots", "AppointmentController@availableTimeSlots");
-Route::post("/schedule", "AppointmentController@store");
+Route::get("/appointments/slots", "AppointmentController@slots");
+Route::post("appointments/store", "AppointmentController@store");

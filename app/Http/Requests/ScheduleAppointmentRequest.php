@@ -29,7 +29,7 @@ class ScheduleAppointmentRequest extends FormRequest
             "date" => ["required", "date"],
             "start_time" => ["required", "regex:/(\d+\:\d+)/"],
             "end_time" => ["required", "regex:/(\d+\:\d+)/"],
-            "timezone" => ["required", "timezone"]
+            "timezone" => ["required", "string"]
         ];
     }
 }

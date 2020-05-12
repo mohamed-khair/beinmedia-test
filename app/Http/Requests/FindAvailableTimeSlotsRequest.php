@@ -27,7 +27,7 @@ class FindAvailableTimeSlotsRequest extends FormRequest
             "expert_id" => ["required", "integer", "exists:experts,id"],
             "duration" => ["required", "integer"],
             "date" => ["required", "date"],
-            "timezone" => ["required", "timezone"]
+            "timezone" => ["required", "string"]
         ];
     }
 }
