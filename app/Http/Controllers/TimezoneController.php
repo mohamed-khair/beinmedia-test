@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\TimezoneService;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -17,17 +18,27 @@ class TimezoneController extends Controller
         $this->timezoneService = $timezoneService;
     }
 
+    /**
+     * Get all global timezones in the world
+     *
+     * @return JsonResponse
+     */
     public function getAllTimezones()
     {
-        $serverTimezone = config("timezone", "Asia/Dubai");
-        $timezones = $this->timezoneService->getTimezones() ?? [$serverTimezone];
+        $timezones = $this->timezoneService->getTimezones();
         return response()->json($timezones);
     }
 
+    /**
+     * Get the user timezone based on his IP address
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function getCurrentUserTimezone(Request $request)
     {
-        $serverTimezone = config("timezone", "Asia/Dubai");
-        $timezone = $this->timezoneService->getCurrentTimezone($request->ip()) ?? $serverTimezone;
+        $client_ip = $request->ip();
+        $timezone = $this->timezoneService->getTimezoneFromIp($client_ip);
         return response()->json($timezone);
     }
 }

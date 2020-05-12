@@ -4,6 +4,7 @@
 namespace App\Services;
 
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +18,7 @@ class TimezoneService
         $this->httpClient = new Client(['base_uri' => 'https://worldtimeapi.org/api/']);
     }
 
-    private function sendHttpRequest($url){
+    private function worldMapApi($url){
         try{
             $response = $this->httpClient->get($url);
             return json_decode($response->getBody()->getcontents(), true) ?? null;
@@ -32,13 +33,13 @@ class TimezoneService
     }
 
     public function getTimezones(){
-        $serverTimezone = config("timezone", "Asia/Dubai");
-        $timezones = [$serverTimezone];
-        return $this->sendHttpRequest("timezone") ?? $timezones;
+        $default_timezone = Carbon::now()->getTimezone()->getAbbr();
+        $default_timezones = [$default_timezone];
+        return $this->worldMapApi("timezone") ?? $default_timezones;
     }
 
-    public function getCurrentTimezone($ip){
-        $timezone = config("timezone", "Asia/Dubai");
-        return $this->sendHttpRequest("ip/$ip")["timezone"] ?? $timezone;
+    public function getTimezoneFromIp($ip){
+        $default_timezone = Carbon::now()->getTimezone()->getAbbr();
+        return $this->worldMapApi("ip/$ip") ?? $default_timezone;
     }
 }

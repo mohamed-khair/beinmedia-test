@@ -20,15 +20,17 @@ export default {
     },
 
     breakpoints: {
-        // when window width is >= 320px
-        320: {
+        360: {
+            slidesPerView: 1,
+            spaceBetween: 10
+        },
+        480: {
             slidesPerView: 2,
             spaceBetween: 20
         },
-        // when window width is >= 480px
-        480: {
+        776: {
             slidesPerView: 3,
-            spaceBetween: 30
-        }
+            spaceBetween: 25
+        },
     }
 }

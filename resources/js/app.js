@@ -1,4 +1,3 @@
-import "./bootstrap";
 import Vue from "vue";
 import vuetify from './plugins/vuetify'
 import App from "./components/App";

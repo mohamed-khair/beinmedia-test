@@ -2,6 +2,7 @@ import axios from "axios";
 
 const $http = axios;
 
+$http.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 $http.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 $http.defaults.headers.common["Access-Control-Allow-Credentials"] = "true";
 $http.defaults.headers.common["Content-Type"] = "application/json; charset=utf-8";
