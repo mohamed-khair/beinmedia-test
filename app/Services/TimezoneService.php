@@ -40,6 +40,6 @@ class TimezoneService
 
     public function getTimezoneFromIp($ip){
         $default_timezone = Carbon::now()->getTimezone()->getAbbr();
-        return $this->worldMapApi("ip/$ip") ?? $default_timezone;
+        return $this->worldMapApi("ip/$ip")["timezone"] ?? $default_timezone;
     }
 }
