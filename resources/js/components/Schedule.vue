@@ -25,15 +25,29 @@
                 label="Available Time Slots"
             ></v-autocomplete>
             <template v-if="hasSubmitted">
-                <v-divider></v-divider>
                 <div class="gradient-bg white--text pa-2">
                     Your have successfully requested an appointment to the expert "{{expert.name}}" on {{selectedDate}}
-                    between {{selectedSlot.start}} and {{selectedSlot.end}} according to {{selectedTimezone}} Timezone.
+                    between {{selectedSlotCloned.start}} and {{selectedSlotCloned.end}} according to {{selectedTimezone}} timezone.
                     Thank you.
                 </div>
             </template>
-            <v-divider></v-divider>
-            <div class="d-flex justify-space-around align-bottom text-center">
+        </v-col>
+        <v-col cols="12" sm="12" md="6">
+            <v-date-picker
+                v-model="selectedDate"
+                color="gradient-bg"
+                :reactive="true"
+                :min="nowDate"
+                :full-width="true"
+                :show-current="true"
+                :multiple="false"
+            ></v-date-picker>
+        </v-col>
+    </v-row>
+    <v-divider/>
+    <v-row>
+        <v-col cols="12" sm="12" md="6">
+            <div class="d-flex justify-space-around align-items-center text-center">
                 <v-btn color="primary" small text class="rounded-pill" @click="$router.go(-1)">Return Back</v-btn>
                 <v-btn
                     :loading="loadingSubmit"
@@ -42,16 +56,6 @@
                     color="gradient-bg"
                     class="white--text rounded-pill">Submit</v-btn>
             </div>
-        </v-col>
-        <v-col cols="12" sm="12" md="6">
-            <v-date-picker
-                v-model="selectedDate"
-                color="gradient-bg"
-                :reactive="true"
-                :full-width="true"
-                :show-current="true"
-                :multiple="false"
-            ></v-date-picker>
         </v-col>
     </v-row>
 </div>
@@ -84,8 +88,10 @@
                 selectedDuration: "",
                 selectedDate: new Date().toISOString().substr(0, 10),
                 selectedSlot: "",
+                selectedSlotCloned: "",
                 clientName: "",
-                expertId: this.$route.params.expertId
+                expertId: this.$route.params.expertId,
+                nowDate: new Date().toISOString().slice(0,10),
             }
         },
         mounted() {
@@ -108,8 +114,8 @@
         },
         computed:{
           isAllFieldsFilled(){
-              const {selectedDate, selectedTimezone, selectedDuration, selectedSlot, clientName, hasSubmitted} = this;
-              return (selectedTimezone && selectedDate && selectedDuration && selectedSlot && clientName && !hasSubmitted);
+              const {selectedDate, selectedTimezone, selectedDuration, selectedSlot, clientName} = this;
+              return (selectedTimezone && selectedDate && selectedDuration && selectedSlot && clientName);
           }
         },
         methods:{
@@ -125,6 +131,7 @@
                         this.loadingSlots = false;
                     })
                     .catch(err => {
+                        this.$toast.error(err.message);
                         console.error(err);
                         this.loadingSlots = false;
                     });
@@ -137,6 +144,9 @@
                         this.hasSubmitted = true;
                         this.$toast.success("success");
                         this.loadingSubmit = false;
+                        this.selectedSlotCloned = {...this.selectedSlot};
+                        this.selectedSlot = "";
+                        this.getSlots();
                     })
                     .catch(err => {
                        this.$toast.error(err.message);
